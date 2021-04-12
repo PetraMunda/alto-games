@@ -133,3 +133,7 @@ img.medium {
     margin: 0.1rem;
 }
 
+.rating span:last-child{
+  color: #262627;
+}
+
