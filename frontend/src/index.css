@@ -118,7 +118,7 @@ img.medium {
   padding: 1rem;
 }
 
-/* >* = all child of card-body */
+/* >* = all child of cart-body */
 .cart-body > * {
   margin-bottom: 0.5rem;
 }
