@@ -50,7 +50,7 @@ footer {
 
 
 
-/* Splošno */
+/* Common */
 
 h1 {
   font-size: 1.8rem;
@@ -71,7 +71,41 @@ a:hover {
   color: #e50aec;
 }
 
-/* Header linki */
+ul{
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+li{
+  margin-top: 1rem;
+}
+
+button {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0.1rem #a4a4a4 solid;
+  font-size: 1.6rem;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+button:hover {
+  border: 0.1rem #404040 solid;
+}
+
+button.primary {
+  background-color: #f0c040;
+}
+
+button.block {
+  width: 100%;
+}
+
+/* Header links */
 
 header a {
   color: #ffffff;
@@ -84,6 +118,7 @@ a.brand {
   font-weight: bold;
 }
 
+/* Row section */
 .row{
   display: flex;
   flex-wrap: wrap;
@@ -95,6 +130,23 @@ a.brand {
   justify-content: center;
 }
 
+.row.top {
+  align-items: flex-start;
+}
+
+.col-1 {
+  flex: 1 1 45rem;
+}
+
+.col-1.cc1 {
+  flex: 1 1 25rem;
+  max-width: 45rem;
+}
+
+.col-2 {
+  flex: 2 1 50rem;
+}
+
 /* images */
 
 img {
@@ -104,6 +156,11 @@ img {
 img.medium {
   max-width: 29rem;
   width: 100%;
+}
+
+img.large {
+  width: 100%;
+  max-width: 600px;
 }
 
 /* Cart */
@@ -137,3 +194,10 @@ img.medium {
   color: #262627;
 }
 
+/* Alert */
+.success {
+  color: #20a020;
+}
+.error {
+  color: #d10f0f;
+}
