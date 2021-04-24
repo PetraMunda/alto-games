@@ -1,20 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { detailsProduct } from '../actions/productActions';
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
 import Rating from '../components/Rating';
-import data from '../data';
+
 
 export default function ProductScreen(props) {
-    const product = data.products.find((x) => x._id === props.match.params.id);
-    if (!product) {
-      return <div> Product Not Found</div>;
-    }
+    const dispatch = useDispatch();
+    const productId = props.match.params.id;
+
+    // load products from product details in redux store
+    const productDetails = useSelector(state => state.productDetails);
+    const { loading, error, product } = productDetails;
+
+    // dispatch details products in useEffect
+    useEffect(() => {
+      dispatch(detailsProduct(productId));
+    }, [dispatch, productId]);
+
 
     return (
+      <div>
+      {loading ? (
+        <LoadingBox></LoadingBox>
+      ) : error ? (
+        <MessageBox variant="danger">{error}</MessageBox>
+      ) : (
         <div>
-          <Link to="/">Back to results</Link>
+          <Link to="/">Back to result</Link>
           <div className="row top">
             <div className="col-2">
-              <img className="large" src={product.image} alt={product.name}></img>
+              <img
+                className="large"
+                src={product.image}
+                alt={product.name}
+              ></img>
             </div>
             <div className="col-1">
               <ul>
@@ -34,13 +56,13 @@ export default function ProductScreen(props) {
                 </li>
               </ul>
             </div>
-            <div className="col-1 cc1">
-              <div className="cart cart-body">
+            <div className="col-1">
+              <div className="card card-body">
                 <ul>
                   <li>
                     <div className="row">
                       <div>Price</div>
-                      <div className="price">{product.price} €</div>
+                      <div className="price">${product.price}</div>
                     </div>
                   </li>
                   <li>
@@ -48,9 +70,9 @@ export default function ProductScreen(props) {
                       <div>Status</div>
                       <div>
                         {product.countInStock > 0 ? (
-                          <span className="success"> In Stock</span>
+                          <span className="success">In Stock</span>
                         ) : (
-                          <span className="danger"> Unavailable</span>
+                          <span className="danger">Unavailable</span>
                         )}
                       </div>
                     </div>
@@ -63,5 +85,7 @@ export default function ProductScreen(props) {
             </div>
           </div>
         </div>
-      );
-    }
+      )}
+    </div>
+  );
+}
