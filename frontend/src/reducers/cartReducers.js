@@ -1,4 +1,4 @@
-import { CART_ADD_ITEM } from "../constants/cartConstants";
+import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
 
 export const cartReducer = (state = { cartItems:[] }, action) => {
     switch(action.type) {
@@ -18,6 +18,11 @@ export const cartReducer = (state = { cartItems:[] }, action) => {
                 // adding new item on the end of cart items
                 return { ...state, cartItems: [...state.cartItems, item]};
             }
+            // filtering out the product which id is equal to action.payload
+            // payload is set to product that we will delite
+            case CART_REMOVE_ITEM:
+                return {...state,
+                    cartItems: state.cartItems.filter( x => x.product !== action.payload)};
         default:
             return state;
     }
