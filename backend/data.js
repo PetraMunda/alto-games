@@ -1,5 +1,23 @@
+import bcrypt from 'bcryptjs';
+
 const data = {
-    products: [
+    users: [
+      {
+        name: 'Petra',
+        email: 'petra.munda1@gmail.com',
+        password: bcrypt.hashSync('1234', 8),
+        isAdmin: true,
+      },
+      {
+        name: 'Marko',
+        email: 'marko@example.com',
+        password: bcrypt.hashSync('1234', 8),
+        isAdmin: false,
+      },
+
+    ],
+
+    products:[
         {
             _id:'1',
             name:'The Mayan Calendar (2012)',
