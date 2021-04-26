@@ -19,7 +19,6 @@ const data = {
 
     products:[
         {
-            _id:'1',
             name:'The Mayan Calendar (2012)',
             category: 'strategy', 
             image: '/images/p1.jpg',
@@ -34,7 +33,6 @@ const data = {
             description: 'Lead your people, build monuments and make offerings to earn the favour of the gods.',
         },
         {
-            _id:'2',
             name:'Underwater Cities (2018)',
             category: 'strategy', 
             image: '/images/p2.jpg',
@@ -49,7 +47,6 @@ const data = {
             description: 'Develop future cities on the seafloor through politics, production, and science.',
           },
           {
-            _id:'3',
             name:'Marvel Champions (2019)',
             category: 'card game', 
             image: '/images/p3.jpg',
@@ -64,7 +61,6 @@ const data = {
             description: 'Battle Marvel villains with unique teams of iconic heroes in this LCG.',
           },
           {
-            _id:'4',
             name:'Too Many Bones (2017)',
             category: 'adventure', 
             image: '/images/p4.jpg',
@@ -79,7 +75,6 @@ const data = {
             description: 'Toss gobs of unique dice in an epic adventure en route to a final boss showdown.',
           },
           {
-            _id:'5',
             name:'AuZtralia (2018)',
             category: 'strategy', 
             image: '/images/p5.jpg',
@@ -94,7 +89,6 @@ const data = {
             description: 'Explore and settle alternate-history 1930s Australia as Cthulhu awakes.',
           },
           {
-            _id:'6',
             name:'Sleeping Gods (2021)',
             category: 'adventure', 
             image: '/images/p6.jpg',
@@ -109,7 +103,6 @@ const data = {
             description: 'Voyages of the steamship "Manticore" and her crew on the Wandering Sea.',
           },
           {
-            _id:'7',
             name:'The Siege of Runedar (2021)',
             category: 'fantasy', 
             image: '/images/p7.jpg',
@@ -124,7 +117,6 @@ const data = {
             description: 'Players take on the role of dwarves charged with defending the walls of Runedar.',
           },
           {
-            _id:'8',
             name:'Lost Ruins of Arnak (2020)',
             category: 'adventure', 
             image: '/images/p8.jpg',
@@ -139,7 +131,6 @@ const data = {
             description: 'Explore an island to find resources and discover the lost ruins of Arnak.',
           },
           {
-            _id:'9',
             name:'Spirit Island (2017)',
             category: 'card game', 
             image: '/images/p9.jpg',
@@ -154,7 +145,6 @@ const data = {
             description: 'Island Spirits join forces using elemental powers to defend their home from invaders.',
           },
           {
-            _id:'10',
             name:'7 Wonders Duel (2015)',
             category: 'fantasy', 
             image: '/images/p10.jpg',
@@ -169,7 +159,6 @@ const data = {
             description: 'Science? Military? What will you draft to win this head-to-head version of 7 Wonders?',
           },
           {
-            _id:'11',
             name:'Gaia Project (2017)',
             category: 'fantasy', 
             image: '/images/p11.jpg',
