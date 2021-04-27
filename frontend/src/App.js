@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import SigninScreen from './screens/SigninScreen';
 import AboutScreen from './screens/AboutScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 
 
@@ -64,6 +65,7 @@ function App() {
               <Route path="/" component={HomeScreen} exact></Route>
               <Route path="/about" component={AboutScreen} exact></Route>
               <Route path="/signin" component={SigninScreen}></Route>
+              <Route path="/register" component={RegisterScreen}></Route>
             </main>
             <footer className="row center" >
             <p>Created by Petra Munda</p></footer>
