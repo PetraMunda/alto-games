@@ -4,11 +4,15 @@ import { BrowserRouter, Link, Route } from 'react-router-dom';
 import CartScreen from './screens/CartScreen';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
+import SigninScreen from './screens/SigninScreen';
+import AboutScreen from './screens/AboutScreen';
+
+
 
 
 function App() {
 
-  const cart = useSelector(state => state.cart);
+  const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
   return (
@@ -19,6 +23,7 @@ function App() {
                     <Link className="brand" to="/">Alto Games</Link>
                 </div>
                 <div>
+                    <Link to="/about">About</Link>
                     <Link to="/demo">Demo game</Link>
                     <Link to="/cart">Cart
                       {cartItems.length > 0 && (
@@ -32,8 +37,11 @@ function App() {
               <Route path="/cart/:id?" component={CartScreen}></Route>
               <Route path="/product/:id" component={ProductScreen}></Route>
               <Route path="/" component={HomeScreen} exact></Route>
+              <Route path="/about" component={AboutScreen} exact></Route>
+              <Route path="/signin" component={SigninScreen}></Route>
             </main>
-            <footer className="row center" >All Rights reserved by Petra Munda</footer>
+            <footer className="row center" >
+            <p>Created by Petra Munda</p></footer>
         </div>
         </BrowserRouter>
   );
