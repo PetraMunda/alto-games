@@ -19,7 +19,12 @@ const initialState = {
         ? JSON.parse(localStorage.getItem('cartItems'))
         // if it does not exist, use an empty array
         : [],
-    }
+        // on the very beginning of loading the app
+        // check local storage for shipping address
+        shippingAddress: localStorage.getItem('shippingAddress')
+        ? JSON.parse(localStorage.getItem('shippingAddress'))
+        : {},
+    },
 };
 const reducer = combineReducers({
     productList: productListReducer,
