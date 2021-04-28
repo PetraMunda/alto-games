@@ -160,6 +160,7 @@ a.brand:hover{
 .col-1 {
   flex: 1 1 45rem;
   padding-left: 1rem;
+  max-width: 40rem;
 }
 
 

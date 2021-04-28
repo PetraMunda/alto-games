@@ -17,7 +17,7 @@ export default function PaymentMethodScreen(props) {
         // we do not refresh teh page when the user click on continue
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod));
-        props.history.push('/paymentMethod');
+        props.history.push('/placeorder');
     }
 
     return (
