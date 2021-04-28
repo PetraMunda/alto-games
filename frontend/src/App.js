@@ -9,6 +9,7 @@ import SigninScreen from './screens/SigninScreen';
 import AboutScreen from './screens/AboutScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ShippingAddressScreen from './screens/ShippingAddressScreen';
+import PaymentMethodScreen from './screens/PaymentMethodScreen';
 
 
 
@@ -68,6 +69,7 @@ function App() {
               <Route path="/signin" component={SigninScreen}></Route>
               <Route path="/register" component={RegisterScreen}></Route>
               <Route path="/shipping" component={ShippingAddressScreen}></Route>
+              <Route path="/payment" component={PaymentMethodScreen}></Route>
             </main>
             <footer className="row center" >
             <p>Created by Petra Munda</p></footer>

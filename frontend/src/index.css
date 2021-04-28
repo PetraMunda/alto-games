@@ -276,8 +276,8 @@ img.large {
 
 .form label {
   margin: 1rem 0;
-  display: block;
 }
+
 
 /* Dropdown */
 .dropdown {
@@ -292,10 +292,11 @@ img.large {
   min-width: 12rem;
   padding: 1rem;
   z-index: 1;
-  background-color: #203040;
+  background-color: #262627;
   margin: 0;
   margin-top: 0.4rem;
   border-radius: 0.5rem;
+  border: 0.1rem solid #f0c040;
 }
 .dropdown:hover .dropdown-content {
   display: block;
@@ -308,6 +309,7 @@ img.large {
   flex: 1;
   padding: 1rem;
   font-weight: bold;
+  margin-top: 2rem;
 }
 
 .checkout-steps > div.active {
