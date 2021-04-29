@@ -35,4 +35,15 @@ orderRouter.post(
   })
 );
 
+// only authenticated user can see order details
+orderRouter.get('/:id', isAuth,expressAsyncHandler(async(req, res) => {
+  const order = await Order.findById(req.params.id) // --> req.params.id = :/id value from user
+  if(order) {
+    res.send(order);
+  } else {
+    res.status(404).send({message: 'Order not found'});
+   }
+  })
+);
+
 export default orderRouter;
