@@ -3,50 +3,63 @@ import { PayPalButton } from 'react-paypal-button-v2';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { detailsOrder } from '../actions/orderActions';
+import { detailsOrder, payOrder } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { ORDER_PAY_RESET } from '../constants/orderConstants';
+
 
 export default function OrderScreen(props) {
     const orderId = props.match.params.id;
     const [sdkReady, setSdkReady] = useState(false);
-    const orderDetails  = useSelector(state => state.orderDetails);
-    const {order, loading, error} = orderDetails;
+    const orderDetails = useSelector((state) => state.orderDetails);
+    const { order, loading, error } = orderDetails;
+    
+    const orderPay = useSelector((state) => state.orderPay);
+    const {
+      loading: loadingPay,
+      error: errorPay,
+      success: successPay,
+      } = orderPay;
     const dispatch = useDispatch();
     
     useEffect(() => {
-        const addPayPalScript = async () => {
-            const {data} = await Axios.get('/api/config/paypal');
-            // create an script element and set the source to paypal sdk
-            const script = document.createElement('script');
-            script.type = "text/javascript";
-            script.src = `https//www.paypal.com/sdk/js?client-id=${data}`;
-            script.async = true;
-            script.onload = () => {
-                setSdkReady(true);
-            };
-            // running this code the upper script will be added as last
-            // child in the html document
-            document.body.appendChild(script);
-        };
+      const addPayPalScript = async () => {
+      const { data } = await Axios.get('/api/config/paypal');
+      // create an script element and set the source to paypal sdk
+      const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+          script.async = true;
+          script.onload = () => {
+            setSdkReady(true);
+          };
+          // running this code the upper script will be added as last
+          // child in the html document
+    document.body.appendChild(script);
+      };
 
         // PayPal logic
-        if (!order._id) {
-            dispatch(detailsOrder(orderId));
+        if (!order || successPay || (order && order._id !== orderId )) {
+          // before dispatch details order we need to reset order pay
+          dispatch({ type: ORDER_PAY_RESET });
+
+          dispatch(detailsOrder(orderId));
           } else {
-            if (!order.isPaid) {
-              if (!window.paypal) {
+            if ( !order.isPaid ) {
+              if ( !window.paypal ) {
                 addPayPalScript();
               } else {
                 setSdkReady(true);
               }
             }
           }
-        }, [dispatch, order, orderId, sdkReady]);
+        }, [dispatch, order, orderId, sdkReady, successPay]);
       
 
-    const successPaymentHandler = () => {
+    const successPaymentHandler = (paymentResult) => {
         // TODO: dispatch pay order
+        dispatch(payOrder(order, paymentResult));
     };
 
     return loading ? (
@@ -60,7 +73,7 @@ export default function OrderScreen(props) {
           <div className="col-2">
             <ul>
               <li>
-                <div className="card card-body">
+                <div className="cart cart-body">
                   <h2>Shipping</h2>
                   <p>
                     <strong>Name:</strong> {order.shippingAddress.fullName} <br />
@@ -79,7 +92,7 @@ export default function OrderScreen(props) {
                 </div>
               </li>
               <li>
-                <div className="card card-body">
+                <div className="cart cart-body">
                   <h2>Payment</h2>
                   <p>
                     <strong>Method:</strong> {order.paymentMethod}
@@ -94,7 +107,7 @@ export default function OrderScreen(props) {
                 </div>
               </li>
               <li>
-                <div className="card card-body">
+                <div className="cart cart-body">
                   <h2>Order Items</h2>
                   <ul>
                     {order.orderItems.map((item) => (
@@ -125,7 +138,7 @@ export default function OrderScreen(props) {
             </ul>
           </div>
           <div className="col-1">
-            <div className="card card-body">
+            <div className="cart cart-body">
               <ul>
                 <li>
                   <h2>Order Summary</h2>
@@ -159,16 +172,23 @@ export default function OrderScreen(props) {
                   </div>
                 </li>
 
-                {
-                  !order.isPaid && (
-                    <li>
-                      {!sdkReady? (<LoadingBox></LoadingBox>):
-                      (
-                        <PayPalButton
+                {!order.isPaid && (
+                <li>
+                  {!sdkReady ? (
+                    <LoadingBox></LoadingBox>
+                  ) : (
+                    <>
+                      {errorPay && (
+                        <MessageBox variant="danger">{errorPay}</MessageBox>
+                      )}
+                      {loadingPay && <LoadingBox></LoadingBox>}
+
+                      <PayPalButton
                         amount={order.totalPrice}
                         onSuccess={successPaymentHandler}
                       ></PayPalButton>
-                      )}
+                    </>
+                  )}
                     </li>
                   )}
               </ul>
