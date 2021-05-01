@@ -4,9 +4,16 @@ import Order from '../models/orderModel.js';
 import { isAuth } from '../utils.js';
 
 // define order router equal to express router to
-// create API for post requests to /api/orders
 const orderRouter = express.Router();
 
+// api for mine orders ( orders of the current user _id )
+orderRouter.get('/mine', isAuth, expressAsyncHandler(async(req, res) => {
+  const orders = await Order.find({user: req.user._id});
+  res.send(orders);
+  })
+);
+
+// create API for post requests to /api/orders
 orderRouter.post(
   '/',
   isAuth,
