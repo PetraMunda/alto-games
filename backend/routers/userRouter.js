@@ -55,4 +55,15 @@ userRouter.post(
   })
 );
 
+// define a route to return user information details (api)
+userRouter.get('/:id', expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if(user) {
+    res.send(user);
+  } else {
+    res.statusCode(404).send({ message: 'User not found'});
+    }
+  })
+);
+
 export default userRouter;

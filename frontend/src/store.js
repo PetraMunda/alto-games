@@ -2,7 +2,12 @@
 // define initial state and a reducer and create redux store
 // returns a list of products in data.js in frontend
 
-import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
+import {
+    createStore,
+    compose,
+    applyMiddleware,
+    combineReducers
+    } from 'redux';
 import thunk from 'redux-thunk';
 import { cartReducer } from './reducers/cartReducers';
 import {
@@ -16,6 +21,7 @@ import {
     productListReducer
     } from './reducers/productReducers';
 import {
+    userDetailsReducer,
     userRegisterReducer,
     userSigninReducer
     } from './reducers/userReducer';
@@ -49,6 +55,7 @@ const reducer = combineReducers({
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
     orderMineList: orderMineListReducer,
+    userDetails: userDetailsReducer,
 });
 
 
