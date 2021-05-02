@@ -1,10 +1,17 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
-import { isAuth } from '../utils.js';
+import { isAdmin, isAuth } from '../utils.js';
 
 // define order router equal to express router to
 const orderRouter = express.Router();
+
+// api for displaying order list to admins
+orderRouter.get('/', isAuth, isAdmin, expressAsyncHandler(async(req, res) => {
+  // in populate  get from user only name4                                                                      
+  const orders = await Order.find({}).populate('user', 'name');
+  res.send(orders);
+}))
 
 // api for mine orders ( orders of the current user _id )
 orderRouter.get('/mine', isAuth, expressAsyncHandler(async(req, res) => {
