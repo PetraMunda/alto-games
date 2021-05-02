@@ -97,4 +97,20 @@ orderRouter.delete(
   })
 );
 
+// api for order delivered - only signed in users
+orderRouter.put('/:id/deliver', isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if(order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+    
+      // after changing the order we have to save it
+      const updatedOrder = await order.save();
+      res.send({message: 'Order Delivered', order: updatedOrder});
+    } else {
+      res.status(404).send({ message: 'Order not found' });
+    }
+  })
+);
+
 export default orderRouter;
