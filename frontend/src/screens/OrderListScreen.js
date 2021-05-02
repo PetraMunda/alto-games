@@ -1,25 +1,47 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listOrders } from '../actions/orderActions';
+import { deleteOrder, listOrders } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { ORDER_DELETE_RESET } from '../constants/orderConstants';
 
 export default function OrderListScreen(props) {
     const orderList = useSelector((state) => state.orderList);
     const { loading, error, orders } = orderList;
+    // after deleting an order we need to refresh the order list
+    // we need to run dispatch(listOrders()); again
+    // so we need to get success delete from redux store and put as a dependency
+    // inside the dependency list in use effect
+    const orderDelete = useSelector((state) => state.orderDelete);
+    const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = orderDelete;
+    
     const dispatch = useDispatch();
+    
     useEffect(() => {
-       dispatch(listOrders());  
-    }, [dispatch]);
+       // reset the delete order to delete a second order, bcs. after
+       // deleting the first one the success is already true
+       dispatch({type: ORDER_DELETE_RESET});
+       dispatch(listOrders());
+    }, [dispatch, successDelete]);
 
     const deleteHandler = (order) => {
         // TODO: delete handler
-    }
+        if(window.confirm('Are you sure to delete?')) {
+          dispatch(deleteOrder(order._id));
+        }
+    };
 
     return (
     <div>
             <div>
             <h1>Orders</h1>
+            {loadingDelete && <LoadingBox></LoadingBox>}
+            {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
+
             {
             loading ? <LoadingBox></LoadingBox>:
             error ? <MessageBox variant="danger">{error}</MessageBox>
@@ -60,8 +82,10 @@ export default function OrderListScreen(props) {
                   >
                     Details
                   </button>
-                  <button type="button" className="small"
-                  onClick={() => deleteHandler(order)}>Delete</button>
+                  <button
+                    type="button"
+                    className="small"
+                    onClick={() => deleteHandler(order)}>Delete</button>
                 </td>
               </tr>
             ))}
