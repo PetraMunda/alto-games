@@ -94,5 +94,17 @@ productRouter.put(
   })
 );
 
+// router for deleting products
+productRouter.delete('/:id', isAuth, isAdmin, expressAsyncHandler(async(req, res) => {
+  const product = await Product.findById(req.params.id);
+  if(product) {
+    const deleteProduct = await product.remove();
+    res.send({message: 'Product Deleted!', product: deleteProduct});
+  } else {
+    res.status(404).send({ message: 'Product not found' });
+    }
+  })
+);
+
 
 export default productRouter;

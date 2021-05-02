@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { createProduct, listProducts } from '../actions/productActions';
+import {
+    createProduct,
+    deleteProduct,
+    listProducts
+    } from '../actions/productActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
+import {
+    PRODUCT_CREATE_RESET,
+    PRODUCT_DELETE_RESET,        
+    } from '../constants/productConstants';
 
 export default function ProductListScreen(props) {
     // get product list from use selector
@@ -18,6 +25,16 @@ export default function ProductListScreen(props) {
         success: successCreate,
         product: createdProduct
     } = productCreate;
+
+    const productDelete = useSelector((state) => state.productDelete);
+    const {
+      loading: loadingDelete,
+      error: errorDelete,
+      success: successDelete,
+    } = productDelete;
+
+
+
     const dispatch = useDispatch();
     useEffect(() => {
         // if product created successfully dispatch reset product
@@ -26,18 +43,26 @@ export default function ProductListScreen(props) {
             dispatch({ type: PRODUCT_CREATE_RESET });
             props.history.push(`/product/${createdProduct._id}/edit`);
         }
-        dispatch(listProducts());
-    }, [createdProduct, dispatch, props.history, successCreate]);
-    
-    // define deleteHandler
-    const deleteHandler = () => {
-        // TODO: dispatch delete action
-    };
+        if(successDelete) {
+            dispatch({type: PRODUCT_DELETE_RESET});
+        }
 
-    // define create (new product) handler
+        dispatch(listProducts());
+        }, [createdProduct, dispatch, props.history, successCreate, successDelete]);
+
     const createHandler = () => {
         dispatch(createProduct());
+      };
+    
+    
+    // define deleteHandler and get delete data
+    const deleteHandler = (product) => {
+        // TODO: dispatch delete action
+        if(window.confirm('Sure to delete that product?')) {
+            dispatch(deleteProduct(product._id));
+        };
     };
+
 
     return (
         <div>
@@ -47,6 +72,9 @@ export default function ProductListScreen(props) {
                 Create product
             </button>
             </div>
+            {loadingDelete && <LoadingBox></LoadingBox>}
+            {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
+
             {loadingCreate && <LoadingBox></LoadingBox>}
             {errorCreate && <MessageBox variant="danger">{errorCreate}</MessageBox>}
 
