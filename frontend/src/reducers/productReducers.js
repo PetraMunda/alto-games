@@ -27,7 +27,7 @@ const {
     }
   };
 
-export const productDetailsReducer = (state = { product:{}, loading: true },
+export const productDetailsReducer = (state = { loading: true },
   action
 ) => {
   switch (action.type) {
