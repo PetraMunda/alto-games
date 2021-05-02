@@ -33,12 +33,14 @@ body {
 
 header {
   grid-area: header; /* povezava headerja z grid-containerjem */
-  background-color: #262627; 
+  background-color: #262627;
+  padding-top: 2rem;
+  padding-bottom: 1.5rem;
 }
 
 main {
   grid-area: main;
-  padding: 1rem;
+  padding: 4.5rem;
 }
 
 footer {
@@ -147,6 +149,7 @@ a.brand:hover{
 
 /* Row section */
 .row{
+  height: fit-content;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
