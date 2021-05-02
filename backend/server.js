@@ -1,9 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
 import productRouter from './routers/productRouter.js';
 import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
+import uploadRouter from './routers/uploadRouter.js';
 
 dotenv.config();
 
@@ -18,13 +20,22 @@ mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/alto-games', {
     useCreateIndex: true,
 });
 
-
+app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 app.get('/api/config/paypal', (req, res) => {
     res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
 });
+
+// fixing the not showing uploaded img
+// path.resolve returns current folder which is being saved in
+// __dirname, then it is being used to concatenate (join) curren
+// folder to the upload folder
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+
 app.get('/', (req, res) => {
     res.send('Server is ready');
 });
