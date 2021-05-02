@@ -65,4 +65,34 @@ productRouter.post(
   })
 );
 
+// new api to apply product edit changes
+productRouter.put(
+  '/:id',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async(req, res) => {
+  const productId = req.params.id;
+  // get data from database
+  const product = await Product.findById(productId);
+    if(product) {
+      product.name = req.body.name;
+      product.category = req.body.category;
+      product.image = req.body.image;
+      product.price = req.body.price;
+      product.countInStock = req.body.countInStock;
+      product.age = req.body.age;
+      product.players = req.body.players;
+      product.time = req.body.time;
+      product.brand = req.body.brand;
+      product.description = req.body.description;
+
+      const updatedProduct = await product.save();
+      res.send({message: 'Product Updated', product: updatedProduct});
+    } else {
+      res.status(404).send({message: 'Product not found'});
+    }
+  })
+);
+
+
 export default productRouter;

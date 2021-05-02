@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { detailsProduct } from '../actions/productActions';
+import { detailsProduct, updateProduct } from '../actions/productActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 
 export default function ProductEditScree(props) {
     // get product id from the url
@@ -19,13 +20,26 @@ export default function ProductEditScree(props) {
     const [brand, setBrand] = useState('');
     const [description, setDescription] = useState('');
     
-    const productDetails = useSelector(state => state.productDetails);
+    const productDetails = useSelector((state) => state.productDetails);
     const { loading, error, product } = productDetails;
-    const dispatch = useDispatch();
     
+    // redirect the user to product list after product update
+    // to do that get data about product update from redux store
+    const productUpdate = useSelector((state) => state.productUpdate);
+    const {
+        loading: loadingUpdate,
+        error: errorUpdate,
+        success: successUpdate,
+    } = productUpdate;
+    
+    const dispatch = useDispatch();
     useEffect(() => {
-        if(!product || (product._id !== productId)) {
-           dispatch(detailsProduct(productId)); 
+        if (successUpdate) {
+            props.history.push('/productlist');
+          }
+          if (!product || product._id !== productId || successUpdate) {
+            dispatch({ type: PRODUCT_UPDATE_RESET });
+            dispatch(detailsProduct(productId));
         } else {
             setName(product.name);
             setCategory(product.category);
@@ -39,22 +53,40 @@ export default function ProductEditScree(props) {
             setDescription(product.description);
         }
     // when there is a change in each of this variables, the function runs again
-    }, [product, dispatch, productId,]);
+    }, [product, dispatch, productId, successUpdate, props.history]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         // TODO: dispatch update product
-    }
+        dispatch(updateProduct({
+            _id: productId,
+            name,
+            category,
+            image,
+            price,
+            countInStock,
+            age,
+            players,
+            time,
+            brand,
+            description,
+            })
+        );
+    };
     return (
         <div>
             <form className="form" onSubmit={submitHandler}>
                 <div>
                     <h1>Edit Product: {productId}</h1>
                 </div>
-                {loading ? <LoadingBox></LoadingBox>
-                :
-                error ? <MessageBox></MessageBox>
-                :
+                {loadingUpdate && <LoadingBox></LoadingBox>} 
+                {errorUpdate && <MessageBox variant="danger">{errorUpdate}</MessageBox>}
+
+                {loading ? (
+                    <LoadingBox></LoadingBox>
+                ) : error ? (
+                    <MessageBox variant="danger">{error}</MessageBox>
+                ) : (
                 <>
                     <div>
                         <label htmlFor="name"><b>Name</b></label>
@@ -148,15 +180,14 @@ export default function ProductEditScree(props) {
                             onChange={(e) => setDescription(e.target.value)}></textarea>
                     </div>
                     <div>
-                        <label></label>
-                        <button className="primary" type="submit">
-                            Update
-                        </button>
+                    <label></label>
+                    <button className="primary" type="submit">
+                        Update
+                    </button>
                     </div>
-
                 </>
-                }
-            </form>
-        </div>
-    )
+        )}
+      </form>
+    </div>
+  );
 }

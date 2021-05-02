@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import { get } from 'mongoose';
 import {
     USER_DETAILS_REQUEST,
     USER_DETAILS_FAIL,
