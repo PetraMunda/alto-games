@@ -2,6 +2,7 @@ import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import data from '../data.js';
 import Product from '../models/productModel.js';
+import { isAdmin, isAuth } from '../utils.js';
 
 const productRouter = express.Router();
 
@@ -35,6 +36,33 @@ productRouter.get('/:id', expressAsyncHandler(async (req, res) => {
     res.status(404).send({ message: 'Product not found'});
   }
 })
+);
+
+// creating new product router
+productRouter.post(
+  '/',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const product = new Product({
+      name: 'samle name ' + Date.now(),
+      category: 'simple category',
+      image: '/images/p1.jpg',
+      price: 0,
+      countInStock: 0,
+      age: 'age',
+      players: 'some number',
+      time: 'some time',
+      brand: 'sample brand',
+      rating: 0,
+      numReviews: 0,
+      description: 'sample description',
+
+    });
+    const createdProduct = await product.save();
+    // saving and passing the created product to frontend 
+    res.send({ message: 'Product Created', product: createdProduct});
+  })
 );
 
 export default productRouter;
