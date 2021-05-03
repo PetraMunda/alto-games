@@ -65,6 +65,7 @@ export const signout = () => (dispatch) => {
     localStorage.removeItem('cartItems');
     localStorage.removeItem('shippingAddress');
     dispatch({ type: USER_SIGNOUT});
+    
 };
 
 export const detailsUser = (userId) => async(dispatch, getState) => {
@@ -110,27 +111,6 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 };
 
 
-export const listUsers = () => async (dispatch, getState) => {
-    dispatch({ type: USER_LIST_REQUEST });
-    try {
-      const {
-        userSignin: { userInfo },
-      } = getState();
-      const { data } = await Axios.get('/api/users', {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      });
-      dispatch({ type: USER_LIST_SUCCESS, payload: data });
-    } catch (error) {
-      const message =
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message;
-      dispatch({ type: USER_LIST_FAIL, payload: message });
-    }
-  };
-
   export const deleteUser = (userId) => async (dispatch, getState) => {
     dispatch({ type: USER_DELETE_REQUEST, payload: userId });
     const {
@@ -151,20 +131,42 @@ export const listUsers = () => async (dispatch, getState) => {
   };
 
   export const updateUser = (user) => async (dispatch, getState) => {
-    dispatch({type: USER_UPDATE_REQUEST, payload: user});
-    const { userSignin:{ userInfo }
+    dispatch({ type: USER_UPDATE_PROFILE_REQUEST, payload: user });
+    const {
+      userSignin: { userInfo },
     } = getState();
     try {
-        const { data } = await Axios.put(`/api/users/${user._id}`, user, {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
-    }   catch(error) {
-            const message =
-            error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message;
-            dispatch({ type: USER_UPDATE_FAIL, payload: message })
+      const { data } = await Axios.put(`/api/users/${user._id}`, user, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      dispatch({ type: USER_UPDATE_FAIL, payload: message });
     }
+  };
 
-};
+
+  export const listUsers = () => async (dispatch, getState) => {
+    dispatch({ type: USER_LIST_REQUEST });
+    try {
+      const {
+        userSignin: { userInfo },
+      } = getState();
+      const { data } = await Axios.get('/api/users', {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      dispatch({ type: USER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      dispatch({ type: USER_LIST_FAIL, payload: message });
+    }
+  };
