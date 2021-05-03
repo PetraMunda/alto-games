@@ -3,10 +3,10 @@ import { PayPalButton } from 'react-paypal-button-v2';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { deliverOrder, detailsOrder, payOrder } from '../actions/orderActions';
+import { deliverOrder, detailsOrder, payOrder, returnOrder } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import { ORDER_DELIVER_RESET, ORDER_PAY_RESET } from '../constants/orderConstants';
+import { ORDER_DELIVER_RESET, ORDER_PAY_RESET, ORDER_RETURN_RESET } from '../constants/orderConstants';
 
 
 export default function OrderScreen(props) {
@@ -14,6 +14,7 @@ export default function OrderScreen(props) {
     const [sdkReady, setSdkReady] = useState(false);
     const orderDetails = useSelector((state) => state.orderDetails);
     const { order, loading, error } = orderDetails;
+    // get info from user for deliver and return item handlers
     const userSignin = useSelector((state) => state.userSignin);
     const { userInfo } = userSignin;
     
@@ -23,6 +24,14 @@ export default function OrderScreen(props) {
       error: errorPay,
       success: successPay,
     } = orderPay;
+
+    const orderReturn = useSelector((state) => state.orderReturn);
+    const {
+      loading: loadingReturn,
+      error: errorReturn,
+      success: successReturn,
+    } = orderReturn;
+
     const orderDeliver = useSelector((state) => state.orderDeliver);
     const {
       loading: loadingDeliver,
@@ -48,10 +57,11 @@ export default function OrderScreen(props) {
       };
 
         // PayPal logic
-        if (!order || successPay || successDeliver || (order && order._id !== orderId )) {
+        if (!order || successPay || successDeliver || successReturn || (order && order._id !== orderId )) {
           // before dispatch details order we need to reset order pay
           dispatch({ type: ORDER_PAY_RESET });
           dispatch({ type: ORDER_DELIVER_RESET });
+          dispatch({ type: ORDER_RETURN_RESET });
 
           dispatch(detailsOrder(orderId));
           } else {
@@ -63,7 +73,7 @@ export default function OrderScreen(props) {
               }
             }
           }
-        }, [dispatch, order, orderId, sdkReady, successPay, successDeliver]);
+        }, [dispatch, order, orderId, sdkReady, successPay, successDeliver, successReturn]);
       
 
     const successPaymentHandler = (paymentResult) => {
@@ -75,6 +85,11 @@ export default function OrderScreen(props) {
     const deliverHandler = () => {
       dispatch(deliverOrder(order._id));
     };
+
+    // function for return handler
+    const returnHandler = () => {
+      dispatch(returnOrder(order._id));
+    }
 
     return loading ? (
       <LoadingBox></LoadingBox>
@@ -120,6 +135,21 @@ export default function OrderScreen(props) {
                   )}
                 </div>
               </li>
+              
+              <li>
+                <div className="cart cart-body">
+                  <h2>Item returned</h2>
+                  
+                  {order.isReturned ? (
+                    <MessageBox variant="success">
+                      Returned {order.returnedAt}
+                    </MessageBox>
+                  ) : (
+                    <MessageBox variant="danger">Not Returned</MessageBox>
+                  )}
+                </div>
+              </li>
+
               <li>
                 <div className="cart cart-body">
                   <h2>Order Items</h2>
@@ -205,6 +235,8 @@ export default function OrderScreen(props) {
                   )}
                     </li>
                   )}
+
+               
                    {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                     <li>
                       {loadingDeliver && <LoadingBox></LoadingBox>}
@@ -219,7 +251,23 @@ export default function OrderScreen(props) {
                         Deliver Order
                       </button>
                     </li>
-              )}
+                  )}
+
+                  
+                    {userInfo.isAdmin && order.isPaid &&
+                    order.isDelivered && !order.isReturned && (
+                      <li>
+                        {loadingReturn && <LoadingBox></LoadingBox>}
+                        {errorReturn && (
+                        <MessageBox variant="danger">{errorReturn}</MessageBox>
+                      )}
+                          <button type="button"
+                            className="primary block"
+                            onClick={returnHandler}
+
+                          >Return</button>
+                      </li>
+                    )}
               </ul>
             </div>
           </div>

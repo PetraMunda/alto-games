@@ -31,6 +31,7 @@ export default function OrderHistoryScreen(props) {
               <th>TOTAL</th>
               <th>PAID</th>
               <th>DELIVERED</th>
+              <th>RETURNED</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
@@ -46,6 +47,7 @@ export default function OrderHistoryScreen(props) {
                     ? order.deliveredAt.substring(0, 10)
                     : 'No'}
                 </td>
+                <td>{order.isReturned ? 'YES' : 'NO'}</td>
                 <td>
                   <button
                     type="button"

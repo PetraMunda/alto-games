@@ -113,4 +113,21 @@ orderRouter.put('/:id/deliver', isAuth, isAdmin, expressAsyncHandler(async (req,
   })
 );
 
+
+// api for ordered item returned - only signed in users
+orderRouter.put('/:id/return', isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if(order) {
+    order.isReturned = true;
+    order.returnedAt = Date.now();
+    
+      // after changing the order we have to save it
+      const updatedOrder = await order.save();
+      res.send({message: 'Item Returned', order: updatedOrder});
+    } else {
+      res.status(404).send({ message: 'Order not found' });
+    }
+  })
+);
+
 export default orderRouter;
